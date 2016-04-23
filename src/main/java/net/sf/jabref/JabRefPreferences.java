@@ -822,6 +822,12 @@ public final class JabRefPreferences {
         defaults.put(CUSTOM_TAB_FIELDS + "_def2", "review");
         defaults.put(CUSTOM_TAB_NAME + "_def2", Localization.lang("Review"));
 
+        /*inseri aqui, para testar
+
+            defaults.put(CUSTOM_TAB_FIELDS + "_def3", "teste");
+            defaults.put(CUSTOM_TAB_NAME + "_def3", Localization.lang("Testte"));
+        */
+
         defaults.put(EMAIL_SUBJECT, Localization.lang("References"));
     }
 
