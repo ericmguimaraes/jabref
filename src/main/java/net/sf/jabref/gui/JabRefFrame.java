@@ -1116,6 +1116,7 @@ public class JabRefFrame extends JFrame implements OutputPrinter {
 
         @Override
         public void actionPerformed(ActionEvent e) {
+            System.out.println("wow a a a a ");
             if (tabbedPane.getTabCount() > 0) {
                 try {
                     ((BasePanel) tabbedPane.getSelectedComponent()).runCommand(command);

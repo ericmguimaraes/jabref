@@ -102,6 +102,7 @@ import java.util.*;
 import java.util.List;
 
 public class BasePanel extends JPanel implements ClipboardOwner, FileUpdateListener {
+
     private static final Log LOGGER = LogFactory.getLog(BasePanel.class);
 
     public static final int SHOWING_NOTHING = 0;
@@ -189,7 +190,6 @@ public class BasePanel extends JPanel implements ClipboardOwner, FileUpdateListe
         return autoCompleters;
     }
 
-
     public BasePanel(JabRefFrame frame, BibDatabase db, File file, MetaData metaData, Charset encoding) {
         Objects.requireNonNull(frame);
         Objects.requireNonNull(db);
@@ -231,8 +231,10 @@ public class BasePanel extends JPanel implements ClipboardOwner, FileUpdateListe
             }
         }
 
-        filterSearchToggle = new StartStopListAction<>(searchFilterList, SearchMatcher.INSTANCE, EverythingMatcher.INSTANCE);
-        filterGroupToggle = new StartStopListAction<>(groupFilterList, GroupMatcher.INSTANCE, EverythingMatcher.INSTANCE);
+        filterSearchToggle = new StartStopListAction<>(searchFilterList, SearchMatcher.INSTANCE,
+                EverythingMatcher.INSTANCE);
+        filterGroupToggle = new StartStopListAction<>(groupFilterList, GroupMatcher.INSTANCE,
+                EverythingMatcher.INSTANCE);
     }
 
     public String getTabTitle() {
@@ -345,9 +347,8 @@ public class BasePanel extends JPanel implements ClipboardOwner, FileUpdateListe
             //int row0 = mainTable.getSelectedRow();
             if ((bes != null) && (bes.length > 0)) {
                 // Create a CompoundEdit to make the action undoable.
-                NamedCompound ce = new NamedCompound((bes.length > 1 ?
-                    Localization.lang("cut entries") :
-                    Localization.lang("cut entry")));
+                NamedCompound ce = new NamedCompound(
+                        (bes.length > 1 ? Localization.lang("cut entries") : Localization.lang("cut entry")));
                 // Loop through the array of entries, and delete them.
                 for (BibEntry be : bes) {
                     database.removeEntry(be);
@@ -369,9 +370,8 @@ public class BasePanel extends JPanel implements ClipboardOwner, FileUpdateListe
                 boolean goOn = showDeleteConfirmationDialog(bes.length);
                 if (goOn) {
                     // Create a CompoundEdit to make the action undoable.
-                    NamedCompound ce = new NamedCompound((bes.length > 1 ?
-                        Localization.lang("delete entries") :
-                        Localization.lang("delete entry")));
+                    NamedCompound ce = new NamedCompound(
+                            (bes.length > 1 ? Localization.lang("delete entries") : Localization.lang("delete entry")));
                     // Loop through the array of entries, and delete them.
                     for (BibEntry be : bes) {
                         database.removeEntry(be);
@@ -429,9 +429,8 @@ public class BasePanel extends JPanel implements ClipboardOwner, FileUpdateListe
                 // or were parsed from a string
                 if ((bes != null) && (bes.length > 0)) {
 
-                    NamedCompound ce = new NamedCompound((bes.length > 1 ?
-                        Localization.lang("paste entries") :
-                        Localization.lang("paste entry")));
+                    NamedCompound ce = new NamedCompound(
+                            (bes.length > 1 ? Localization.lang("paste entries") : Localization.lang("paste entry")));
 
                     // Store the first inserted bibtexentry.
                     // bes[0] does not work as bes[0] is first clonded,
@@ -517,6 +516,7 @@ public class BasePanel extends JPanel implements ClipboardOwner, FileUpdateListe
 
             String errorMessage = "";
             boolean connectToDB;
+
 
             // run first, in EDT:
             @Override
@@ -606,6 +606,14 @@ public class BasePanel extends JPanel implements ClipboardOwner, FileUpdateListe
             dialog.setVisible(true);
         });
 
+        /*
+         *
+         *
+         *
+         *
+         *
+         *
+         * */
         // The action for auto-generating keys.
         actions.put(Actions.MAKE_KEY, new AbstractWorker() {
 
@@ -614,9 +622,11 @@ public class BasePanel extends JPanel implements ClipboardOwner, FileUpdateListe
             int numSelected;
             boolean cancelled;
 
+
             // Run first, in EDT:
             @Override
             public void init() {
+                System.out.println("gerando chaves init ");
                 entries = new ArrayList<>(Arrays.asList(getSelectedEntries()));
                 numSelected = entries.size();
 
@@ -634,7 +644,7 @@ public class BasePanel extends JPanel implements ClipboardOwner, FileUpdateListe
             @Override
             public void run() {
                 BibEntry bes;
-
+                System.out.println("gerando chaves run ");
                 // First check if any entries have keys set already. If so, possibly remove
                 // them from consideration, or warn about overwriting keys.
                 // This is a partial clone of net.sf.jabref.gui.entryeditor.EntryEditor.GenerateKeyAction.actionPerformed(ActionEvent)
@@ -650,8 +660,7 @@ public class BasePanel extends JPanel implements ClipboardOwner, FileUpdateListe
                                     Localization.lang("One or more keys will be overwritten. Continue?"),
                                     Localization.lang("Disable this confirmation dialog"), false);
                             final int answer = JOptionPane.showConfirmDialog(frame, cbm,
-                                    Localization.lang("Overwrite keys"),
-                                    JOptionPane.YES_NO_OPTION);
+                                    Localization.lang("Overwrite keys"), JOptionPane.YES_NO_OPTION);
                             if (cbm.isSelected()) {
                                 Globals.prefs.putBoolean(JabRefPreferences.WARN_BEFORE_OVERWRITING_KEY, false);
                             }
@@ -667,7 +676,6 @@ public class BasePanel extends JPanel implements ClipboardOwner, FileUpdateListe
                     }
                 }
 
-
                 HashMap<BibEntry, Object> oldvals = new HashMap<>();
                 // Iterate again, removing already set keys. This is skipped if overwriting
                 // is disabled, since all entries with keys set will have been removed.
@@ -676,7 +684,9 @@ public class BasePanel extends JPanel implements ClipboardOwner, FileUpdateListe
                         bes = entry;
                         // Store the old value:
                         oldvals.put(bes, bes.getField(BibEntry.KEY_FIELD));
+                        System.out.println("ANTES: " + bes.getField(BibEntry.KEY_FIELD));
                         database.setCiteKeyForEntry(bes.getId(), null);
+                        System.out.println("DEPOIS: " + bes.getField(BibEntry.KEY_FIELD));
                     }
                 }
 
@@ -685,7 +695,10 @@ public class BasePanel extends JPanel implements ClipboardOwner, FileUpdateListe
                 // Finally, set the new keys:
                 for (BibEntry entry : entries) {
                     bes = entry;
+                    System.out.println("antes do makeLabel: " + bes.getField(BibEntry.KEY_FIELD));
                     LabelPatternUtil.makeLabel(metaData, database, bes);
+                    System.out.println("depois do makeLabel: " + (String) oldvals.get(bes) + " "
+                            + bes.getField(BibEntry.KEY_FIELD));
                     ce.addEdit(new UndoableKeyChange(database, bes.getId(), (String) oldvals.get(bes),
                             bes.getField(BibEntry.KEY_FIELD)));
                 }
@@ -696,6 +709,7 @@ public class BasePanel extends JPanel implements ClipboardOwner, FileUpdateListe
             // Run third, on EDT:
             @Override
             public void update() {
+                System.out.println("gerando chaves update");
                 database.setFollowCrossrefs(true);
                 if (cancelled) {
                     frame.unblock();
@@ -723,8 +737,17 @@ public class BasePanel extends JPanel implements ClipboardOwner, FileUpdateListe
                 output(formatOutputMessage(Localization.lang("Generated BibTeX key for"), numSelected));
                 frame.unblock();
             }
+
         });
 
+        /*
+         *
+         *
+         *
+         *
+         *
+         *
+         * */
         // The action for cleaning up entry.
         actions.put(Actions.CLEANUP, cleanUpAction);
 
@@ -759,9 +782,7 @@ public class BasePanel extends JPanel implements ClipboardOwner, FileUpdateListe
 
                 if (keys.size() == bes.length) {
                     // All entries had keys.
-                    output((bes.length > 1 ?
-                        Localization.lang("Copied keys") :
-                        Localization.lang("Copied key")) + '.');
+                    output((bes.length > 1 ? Localization.lang("Copied keys") : Localization.lang("Copied key")) + '.');
                 } else {
                     output(Localization.lang("Warning: %0 out of %1 entries have undefined BibTeX key.",
                             Integer.toString(bes.length - keys.size()), Integer.toString(bes.length)));
@@ -799,8 +820,8 @@ public class BasePanel extends JPanel implements ClipboardOwner, FileUpdateListe
 
                     if (keys.size() == bes.length) {
                         // All entries had keys.
-                        output(bes.length > 1 ? Localization.lang("Copied keys") :
-                            Localization.lang("Copied key") + '.');
+                        output(bes.length > 1 ? Localization.lang("Copied keys") : Localization.lang("Copied key")
+                                + '.');
                     } else {
                         output(Localization.lang("Warning: %0 out of %1 entries have undefined BibTeX key.",
                                 Integer.toString(bes.length - keys.size()), Integer.toString(bes.length)));
@@ -850,11 +871,11 @@ public class BasePanel extends JPanel implements ClipboardOwner, FileUpdateListe
 
                     if (copied == bes.length) {
                         // All entries had keys.
-                        output((bes.length > 1 ?
-                            Localization.lang("Copied keys") :
-                            Localization.lang("Copied key")) + '.');
+                        output((bes.length > 1 ? Localization.lang("Copied keys") : Localization.lang("Copied key"))
+                                + '.');
                     } else {
-                        output(Localization.lang("Warning: %0 out of %1 entries have undefined BibTeX key.", Integer.toString(copied), Integer.toString(bes.length)));
+                        output(Localization.lang("Warning: %0 out of %1 entries have undefined BibTeX key.",
+                                Integer.toString(copied), Integer.toString(bes.length)));
                     }
                 }
             }
@@ -929,6 +950,8 @@ public class BasePanel extends JPanel implements ClipboardOwner, FileUpdateListe
             private final static String URL_FIELD = "url";
             private final static String DOI_FIELD = "doi";
             private final static String PS_FIELD = "ps";
+
+
             @Override
             public void action() {
                 final BibEntry[] bes = mainTable.getSelectedEntries();
@@ -1002,9 +1025,8 @@ public class BasePanel extends JPanel implements ClipboardOwner, FileUpdateListe
                     }
                 }
 
-                output(Localization.lang("Replaced") + ' ' + counter + ' ' + (counter == 1 ?
-                     Localization.lang("occurrence") :
-                     Localization.lang("occurrences")) + '.');
+                output(Localization.lang("Replaced") + ' ' + counter + ' '
+                        + (counter == 1 ? Localization.lang("occurrence") : Localization.lang("occurrences")) + '.');
                 if (counter > 0) {
                     ce.end();
                     undoManager.addEdit(ce);
@@ -1090,17 +1112,14 @@ public class BasePanel extends JPanel implements ClipboardOwner, FileUpdateListe
         actions.put(Relevance.getInstance().getValues().get(0).getActionName(),
                 new SpecialFieldAction(frame, Relevance.getInstance(),
                         Relevance.getInstance().getValues().get(0).getFieldValue(), true,
-                        Localization.lang("Toggle relevance"),
-                        Localization.lang("Toggled relevance for %0 entries")));
+                        Localization.lang("Toggle relevance"), Localization.lang("Toggled relevance for %0 entries")));
         actions.put(Quality.getInstance().getValues().get(0).getActionName(),
                 new SpecialFieldAction(frame, Quality.getInstance(),
                         Quality.getInstance().getValues().get(0).getFieldValue(), true,
-                        Localization.lang("Toggle quality"),
-                        Localization.lang("Toggled quality for %0 entries")));
+                        Localization.lang("Toggle quality"), Localization.lang("Toggled quality for %0 entries")));
         actions.put(Printed.getInstance().getValues().get(0).getActionName(), new SpecialFieldAction(frame,
                 Printed.getInstance(), Printed.getInstance().getValues().get(0).getFieldValue(), true,
-                Localization.lang("Toggle print status"),
-                Localization.lang("Toggled print status for %0 entries")));
+                Localization.lang("Toggle print status"), Localization.lang("Toggled print status for %0 entries")));
 
         for (SpecialFieldValue prio : Priority.getInstance().getValues()) {
             actions.put(prio.getActionName(), prio.getAction(this.frame));
@@ -1142,8 +1161,8 @@ public class BasePanel extends JPanel implements ClipboardOwner, FileUpdateListe
         actions.put(Actions.SWITCH_PREVIEW, (BaseAction) selectionListener::switchPreview);
 
         actions.put(Actions.MANAGE_SELECTORS, (BaseAction) () -> {
-            ContentSelectorDialog2 csd = new ContentSelectorDialog2
-                    (frame, frame, BasePanel.this, false, metaData, null);
+            ContentSelectorDialog2 csd = new ContentSelectorDialog2(frame, frame, BasePanel.this, false, metaData,
+                    null);
             PositionWindow.placeDialog(csd, frame);
             csd.setVisible(true);
         });
@@ -1266,8 +1285,7 @@ public class BasePanel extends JPanel implements ClipboardOwner, FileUpdateListe
             String tryDiff = Localization.lang("Try different encoding");
             int answer = JOptionPane.showOptionDialog(frame, builder.getPanel(), SAVE_DATABASE,
                     JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null,
-                    new String[] {Localization.lang("Save"), tryDiff,
-                            Localization.lang("Cancel")}, tryDiff);
+                    new String[] {Localization.lang("Save"), tryDiff, Localization.lang("Cancel")}, tryDiff);
 
             if (answer == JOptionPane.NO_OPTION) {
                 // The user wants to use another encoding.
@@ -1358,6 +1376,7 @@ public class BasePanel extends JPanel implements ClipboardOwner, FileUpdateListe
         return searchBar;
     }
 
+
     /**
      * This listener is used to add a new entry to a group (or a set of groups) in case the Group View is selected and
      * one or more groups are marked
@@ -1415,6 +1434,7 @@ public class BasePanel extends JPanel implements ClipboardOwner, FileUpdateListe
             }
         }
     }
+
 
     /**
      * This method is called from JabRefFrame when the user wants to create a new entry.
@@ -1752,8 +1772,8 @@ public class BasePanel extends JPanel implements ClipboardOwner, FileUpdateListe
         int divLoc = -1;
         String visName = null;
         if ((getShowing() != null) && isShowingEditor()) {
-                visName = ((EntryEditor) splitPane.getBottomComponent()).getVisiblePanelName();
-            }
+            visName = ((EntryEditor) splitPane.getBottomComponent()).getVisiblePanelName();
+        }
         if (getShowing() != null) {
             divLoc = splitPane.getDividerLocation();
         }
@@ -2012,12 +2032,15 @@ public class BasePanel extends JPanel implements ClipboardOwner, FileUpdateListe
         return filterGroupToggle;
     }
 
+
     public static class StartStopListAction<E> {
+
         private FilterList<E> list;
         private final Matcher<E> active;
         private final Matcher<E> inactive;
 
         private boolean isActive = false;
+
 
         private StartStopListAction(FilterList<E> list, Matcher<E> active, Matcher<E> inactive) {
             this.list = list;
@@ -2043,7 +2066,7 @@ public class BasePanel extends JPanel implements ClipboardOwner, FileUpdateListe
 
         public void updateFilterList(FilterList<E> filterList) {
             list = filterList;
-            if(isActive) {
+            if (isActive) {
                 list.setMatcher(active);
             } else {
                 list.setMatcher(inactive);
@@ -2098,7 +2121,8 @@ public class BasePanel extends JPanel implements ClipboardOwner, FileUpdateListe
         }
         if (bes.length > 1) {
             int choice = JOptionPane.showConfirmDialog(this,
-                    Localization.lang("Multiple entries selected. Do you want to change the type of all these to '%0'?", type.getName()),
+                    Localization.lang("Multiple entries selected. Do you want to change the type of all these to '%0'?",
+                            type.getName()),
                     Localization.lang("Change entry type"), JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
             if (choice == JOptionPane.NO_OPTION) {
                 return;
@@ -2146,6 +2170,8 @@ public class BasePanel extends JPanel implements ClipboardOwner, FileUpdateListe
      * If the relevant option is set, autogenerate keys for all entries that are lacking keys.
      */
     public void autoGenerateKeysBeforeSaving() {
+        //ESTE MÉTODO É EXECUTADO TODA VEZ QUE A BASE DE DADOS É SALVA
+        System.out.println("wowowowowowowowowow");
         if (Globals.prefs.getBoolean(JabRefPreferences.GENERATE_KEYS_BEFORE_SAVING)) {
             NamedCompound ce = new NamedCompound(Localization.lang("autogenerate keys"));
             boolean any = false;
@@ -2193,6 +2219,7 @@ public class BasePanel extends JPanel implements ClipboardOwner, FileUpdateListe
                     splitPane.getHeight() - splitPane.getDividerLocation());
         }
     }
+
 
     class UndoAction implements BaseAction {
 
@@ -2251,6 +2278,7 @@ public class BasePanel extends JPanel implements ClipboardOwner, FileUpdateListe
             markChangedOrUnChanged();
         }
     }
+
 
     // Method pertaining to the ClipboardOwner interface.
     @Override
@@ -2503,13 +2531,15 @@ public class BasePanel extends JPanel implements ClipboardOwner, FileUpdateListe
     }
 
     private String formatOutputMessage(String start, int count) {
-        return String.format("%s %d %s.", start, count, (count > 1 ? Localization.lang("entries") :
-            Localization.lang("entry")));
+        return String.format("%s %d %s.", start, count,
+                (count > 1 ? Localization.lang("entries") : Localization.lang("entry")));
     }
+
 
     private class SaveSelectedAction implements BaseAction {
 
         private final DatabaseSaveType saveType;
+
 
         public SaveSelectedAction(DatabaseSaveType saveType) {
             this.saveType = saveType;
@@ -2526,8 +2556,7 @@ public class BasePanel extends JPanel implements ClipboardOwner, FileUpdateListe
                 if (!expFile.exists() || (JOptionPane.showConfirmDialog(frame,
                         Localization.lang("'%0' exists. Overwrite file?", expFile.getName()),
                         Localization.lang("Save database"), JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION)) {
-                    saveDatabase(expFile, true, Globals.prefs.getDefaultEncoding(),
-                            saveType);
+                    saveDatabase(expFile, true, Globals.prefs.getDefaultEncoding(), saveType);
                     frame.getFileHistory().newFile(expFile.getPath());
                     frame.output(Localization.lang("Saved selected to '%0'.", expFile.getPath()));
                 }
@@ -2599,7 +2628,7 @@ public class BasePanel extends JPanel implements ClipboardOwner, FileUpdateListe
                 }
             }
 
-        return Optional.empty();
+            return Optional.empty();
+        }
     }
-}
 }

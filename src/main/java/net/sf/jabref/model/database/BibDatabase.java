@@ -203,16 +203,22 @@ public class BibDatabase {
     }
 
     public synchronized boolean setCiteKeyForEntry(String id, String key) {
+        System.out.println("INICIO: KEY = " + key);
         if (!entries.containsKey(id)) {
             return false; // Entry doesn't exist!
         }
         BibEntry entry = getEntryById(id);
         String oldKey = entry.getCiteKey();
+        System.out.println("Chave antiga: " + oldKey);
         if (key == null) {
+            System.out.println("BigDatabase.java setCiteKeyForEntry");
             entry.clearField(BibEntry.KEY_FIELD);
+            System.out.println("key = null");
         } else {
             entry.setField(BibEntry.KEY_FIELD, key);
+            System.out.println("key = " + key);
         }
+        System.out.println("Chave nova: " + entry.getCiteKey());
         return checkForDuplicateKeyAndAdd(oldKey, entry.getCiteKey());
     }
 
