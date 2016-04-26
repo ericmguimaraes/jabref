@@ -420,6 +420,7 @@ public class LabelPatternUtil {
      * @return modified BibEntry
      */
     public static void makeLabel(MetaData metaData, BibDatabase dBase, BibEntry entry) {
+        System.out.println("makeLabel.... ");
         LabelPatternUtil.database = dBase;
         List<String> typeList;
         String key;
@@ -446,6 +447,7 @@ public class LabelPatternUtil {
                     // String modifier = null;
                     String[] parts = LabelPatternUtil.parseFieldMarker(typeListEntry);//val.split(":");
 
+                    System.out.println("makelabel(1,2) val = " + parts[0]);
                     String label = LabelPatternUtil.makeLabel(entry, parts[0]);
 
                     // apply modifier if present

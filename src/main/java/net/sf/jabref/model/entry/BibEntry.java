@@ -367,8 +367,11 @@ public class BibEntry {
         }
         Object oldValue = fields.get(fieldName);
         fields.remove(fieldName);
+        System.out.println("BibEntry clearField " + fieldName);
         try {
+
             firePropertyChangedEvent(fieldName, oldValue, null);
+            System.out.println(" Chave alterada: " + this.getCiteKey());
         } catch (PropertyVetoException pve) {
             throw new IllegalArgumentException("Change rejected: " + pve);
         }
