@@ -652,4 +652,8 @@ public class BibDatabase {
     public String getEpilog() {
         return epilog;
     }
+
+    public int countBibEntry() {
+        return entries.size();
+    }
 }
