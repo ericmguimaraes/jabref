@@ -1,13 +1,19 @@
 package br.com.ufs.ds3.customization;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JList;
+import javax.swing.JTextField;
+import javax.swing.ListModel;
 
 import org.assertj.swing.core.GenericTypeMatcher;
 import org.assertj.swing.edt.FailOnThreadViolationRepaintManager;
 import org.assertj.swing.finder.WindowFinder;
 import org.assertj.swing.fixture.DialogFixture;
 import org.assertj.swing.fixture.FrameFixture;
-import org.assertj.swing.fixture.JComboBoxFixture;
+import org.assertj.swing.fixture.JButtonFixture;
+import org.assertj.swing.fixture.JListFixture;
+import org.assertj.swing.fixture.JTextComponentFixture;
 import org.assertj.swing.junit.testcase.AssertJSwingJUnitTestCase;
 import org.assertj.swing.launcher.ApplicationLauncher;
 import org.junit.Assert;
@@ -40,11 +46,58 @@ public class EntryCustomizationDialogTest extends AssertJSwingJUnitTestCase {
     }
 
     @Test
-    public void testEntryCustomization(){
+    public void testAddEntryType() {
         frameFixture.menuItemWithPath("Options", Localization.lang("Customize entry types")).click();
         DialogFixture d = frameFixture.dialog();
-        JComboBoxFixture c = d.comboBox(getComboBoxByValue("book"));
-        Assert.assertTrue(c != null);
+        JTextComponentFixture text = d.textBox(getActiveTextArea());
+        text.enterText("TESTE_ADD_ENTRY_TYPE");
+        JButtonFixture b = d.button(getActiveButton("add"));
+        b.click();
+        JListFixture l = d.list(getJlistStringByItemValue("TESTE_ADD_ENTRY_TYPE"));
+        Assert.assertTrue(isAdded(l.target(), "TESTE_ADD_ENTRY_TYPE"));
+    }
+
+    private GenericTypeMatcher<JTextField> getActiveTextArea() {
+        GenericTypeMatcher<JTextField> textMatcher = new GenericTypeMatcher<JTextField>(JTextField.class) {
+
+            @Override
+            protected boolean isMatching(JTextField component) {
+                if(component.isEnabled()) {
+                    return true;
+                }
+                return false;
+            }
+        };
+        return textMatcher;
+    }
+
+    protected boolean isAdded(JList component, String value) {
+        ListModel model = component.getModel();
+
+        for (int i = 0; i < model.getSize(); i++) {
+            Object o = model.getElementAt(i);
+            if (!(o instanceof String)) {
+                break;
+            }
+            if (value.replace(" ", "").toLowerCase().equals(((String) o).toLowerCase().replace(" ", ""))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private GenericTypeMatcher<JButton> getActiveButton(final String text) {
+        GenericTypeMatcher<JButton> textMatcher = new GenericTypeMatcher<JButton>(JButton.class) {
+
+            @Override
+            protected boolean isMatching(JButton component) {
+                if(component.getText().toLowerCase().equals(text.toLowerCase())&&component.isEnabled()) {
+                    return true;
+                }
+                return false;
+            }
+        };
+        return textMatcher;
     }
 
     private GenericTypeMatcher<javax.swing.JComboBox> getComboBoxByValue(final String value) {
@@ -56,7 +109,30 @@ public class EntryCustomizationDialogTest extends AssertJSwingJUnitTestCase {
                 int size = textField.getItemCount();
                 for (int i = 0; i < size; i++) {
                     String fieldValue = textField.getItemAt(i).toString();
-                    if (value.replace(" ", "").equals(fieldValue.replace(" ", ""))) {
+                    if (value.replace(" ", "").toLowerCase().equals(fieldValue.toLowerCase().replace(" ", ""))) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+        };
+        return textMatcher;
+    }
+
+    private GenericTypeMatcher<javax.swing.JList> getJlistStringByItemValue(final String value) {
+        GenericTypeMatcher<javax.swing.JList> textMatcher = new GenericTypeMatcher<javax.swing.JList>(
+                javax.swing.JList.class) {
+
+            @Override
+            protected boolean isMatching(JList component) {
+                ListModel model = component.getModel();
+
+                for (int i = 0; i < model.getSize(); i++) {
+                    Object o = model.getElementAt(i);
+                    if (!(o instanceof String)) {
+                        break;
+                    }
+                    if (value.replace(" ", "").toLowerCase().equals(((String) o).toLowerCase().replace(" ", ""))) {
                         return true;
                     }
                 }
