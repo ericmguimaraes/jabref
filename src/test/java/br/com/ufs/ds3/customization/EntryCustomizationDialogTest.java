@@ -13,6 +13,7 @@ import org.assertj.swing.fixture.DialogFixture;
 import org.assertj.swing.fixture.FrameFixture;
 import org.assertj.swing.fixture.JButtonFixture;
 import org.assertj.swing.fixture.JListFixture;
+import org.assertj.swing.fixture.JPanelFixture;
 import org.assertj.swing.fixture.JTextComponentFixture;
 import org.assertj.swing.junit.testcase.AssertJSwingJUnitTestCase;
 import org.assertj.swing.launcher.ApplicationLauncher;
@@ -55,6 +56,25 @@ public class EntryCustomizationDialogTest extends AssertJSwingJUnitTestCase {
         b.click();
         JListFixture l = d.list(getJlistStringByItemValue("TESTE_ADD_ENTRY_TYPE"));
         Assert.assertTrue(isAdded(l.target(), "TESTE_ADD_ENTRY_TYPE"));
+    }
+
+    @Test
+    public void testDeleteEntryTypeBeforeApply() {
+        frameFixture.menuItemWithPath("Options", Localization.lang("Customize entry types")).click();
+        DialogFixture d = frameFixture.dialog();
+        JTextComponentFixture text = d.textBox(getActiveTextArea());
+        text.enterText("t");
+        JButtonFixture b = d.button(getActiveButton("add"));
+        b.click();
+        JListFixture l = d.list(getJlistStringByItemValue("t"));
+        l.clickItem("t");
+        JPanelFixture main = d.panel("main");
+        JButtonFixture remove = main.button("remove1");
+        remove.click();
+        DialogFixture error = frameFixture.dialog();
+        error.button("Ok").click();
+        System.out.println("!uahd");
+
     }
 
     private GenericTypeMatcher<JTextField> getActiveTextArea() {
@@ -119,6 +139,22 @@ public class EntryCustomizationDialogTest extends AssertJSwingJUnitTestCase {
         return textMatcher;
     }
 
+    /*
+    private GenericTypeMatcher<javax.swing.JButton> getJButtonStringByNameAndActive(final String name) {
+        GenericTypeMatcher<javax.swing.JButton> nameActiveMatcher = new GenericTypeMatcher<JButton>(
+                javax.swing.JButton.class) {
+
+
+
+            @Override
+            protected boolean isMatching(JButton component) {
+                // TODO Auto-generated method stub
+
+            }
+        };
+
+    }
+    */
     private GenericTypeMatcher<javax.swing.JList> getJlistStringByItemValue(final String value) {
         GenericTypeMatcher<javax.swing.JList> textMatcher = new GenericTypeMatcher<javax.swing.JList>(
                 javax.swing.JList.class) {

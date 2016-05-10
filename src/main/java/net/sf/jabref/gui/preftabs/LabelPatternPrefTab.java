@@ -49,7 +49,7 @@ class LabelPatternPrefTab extends LabelPatternPanel implements PrefsTab {
     private final JCheckBox generateOnSave = new JCheckBox(Localization.lang("Generate keys before saving (for entries without a key)"));
     private final JCheckBox autoGenerateOnImport = new JCheckBox(Localization.lang("Generate keys for imported entries"));
 
-    private final JRadioButton letterStartA = new JRadioButton(Localization.lang("Ensure unique keys using letters (a, b, ...)"));
+    private final JRadioButton letterStartA =  new JRadioButton(Localization.lang("Ensure unique keys using letters (a, b, ...)"));
     private final JRadioButton letterStartB = new JRadioButton(Localization.lang("Ensure unique keys using letters (b, c, ...)"));
     private final JRadioButton alwaysAddLetter = new JRadioButton(Localization.lang("Always add letter (a, b, ...) to generated keys"));
 
