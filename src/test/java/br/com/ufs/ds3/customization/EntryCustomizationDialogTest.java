@@ -60,6 +60,23 @@ public class EntryCustomizationDialogTest extends AssertJSwingJUnitTestCase {
     }
 
     @Test
+    public void testRemoveEntryTypeAfterApply() {
+        frameFixture.menuItemWithPath("Options", Localization.lang("Customize entry types")).click();
+        DialogFixture d = frameFixture.dialog();
+        JTextComponentFixture text = d.textBox(getActiveTextArea());
+        text.enterText("TEST_REMOVE");
+        JButtonFixture addButton = d.button(getActiveButton("add"));
+        addButton.click();
+        JButtonFixture ApplyButton = d.button(getActiveButton("Apply"));
+        ApplyButton.click();
+        JListFixture l = d.list(getJlistStringByItemValue("TEST_REMOVE"));
+        l.clickItem("test_remove");
+        JButtonFixture removeButton = d.button(getActiveButtonByPositionAndText("remove", 1));
+        removeButton.click();
+        Assert.assertFalse(isAdded(l.target(), "TEST_REMOVE"));
+    }
+
+    @Test
     public void testRemoveEntryTypeBeforeApply() {
         frameFixture.menuItemWithPath("Options", Localization.lang("Customize entry types")).click();
         DialogFixture d = frameFixture.dialog();
@@ -178,6 +195,7 @@ public class EntryCustomizationDialogTest extends AssertJSwingJUnitTestCase {
 
     }
     */
+
     private GenericTypeMatcher<javax.swing.JList> getJlistStringByItemValue(final String value) {
         GenericTypeMatcher<javax.swing.JList> textMatcher = new GenericTypeMatcher<javax.swing.JList>(
                 javax.swing.JList.class) {
