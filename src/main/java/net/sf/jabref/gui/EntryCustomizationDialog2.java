@@ -81,6 +81,9 @@ public class EntryCustomizationDialog2 extends JDialog implements ListSelectionL
         JPanel main = new JPanel();
         JPanel buttons = new JPanel();
         JPanel right = new JPanel();
+        main.setName("main");
+        buttons.setName("buttons");
+        right.setName("right");
         main.setLayout(new BorderLayout());
         right.setLayout(new GridLayout(biblatexMode ? 2 : 1, 2));
 
