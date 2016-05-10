@@ -60,7 +60,7 @@ public class EntryCustomizationDialogTest extends AssertJSwingJUnitTestCase {
     }
 
     @Test
-    public void testRemoveEntryType() {
+    public void testRemoveEntryTypeBeforeApply() {
         frameFixture.menuItemWithPath("Options", Localization.lang("Customize entry types")).click();
         DialogFixture d = frameFixture.dialog();
         JTextComponentFixture text = d.textBox(getActiveTextArea());
