@@ -27,6 +27,7 @@ public class EntryCustomizationDialogTest extends AssertJSwingJUnitTestCase {
 
     private FrameFixture frameFixture;
 
+    private int countPosition = 0;
 
     @BeforeClass
     public static void before() {
@@ -55,6 +56,38 @@ public class EntryCustomizationDialogTest extends AssertJSwingJUnitTestCase {
         b.click();
         JListFixture l = d.list(getJlistStringByItemValue("TESTE_ADD_ENTRY_TYPE"));
         Assert.assertTrue(isAdded(l.target(), "TESTE_ADD_ENTRY_TYPE"));
+    }
+
+    @Test
+    public void testRemoveEntryType() {
+        frameFixture.menuItemWithPath("Options", Localization.lang("Customize entry types")).click();
+        DialogFixture d = frameFixture.dialog();
+        JTextComponentFixture text = d.textBox(getActiveTextArea());
+        text.enterText("TESTE_REMOVE_ENTRY_TYPE");
+        JButtonFixture addButton = d.button(getActiveButton("add"));
+        addButton.click();
+        JListFixture l = d.list(getJlistStringByItemValue("TESTE_REMOVE_ENTRY_TYPE"));
+        Assert.assertTrue(isAdded(l.target(), "TESTE_REMOVE_ENTRY_TYPE"));
+        JButtonFixture removeButton = d.button(getActiveButtonByPositionAndText("remove", 1));
+        Assert.assertTrue(removeButton != null);
+    }
+
+    private GenericTypeMatcher<? extends JButton> getActiveButtonByPositionAndText(String text, int i) {
+        countPosition = 0;
+        GenericTypeMatcher<JButton> textMatcher = new GenericTypeMatcher<JButton>(JButton.class) {
+
+            @Override
+            protected boolean isMatching(JButton component) {
+                if (component.getText().toLowerCase().equals(text.toLowerCase()) && component.isEnabled()) {
+                    countPosition++;
+                    if (countPosition == i) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+        };
+        return textMatcher;
     }
 
     private GenericTypeMatcher<JTextField> getActiveTextArea() {
