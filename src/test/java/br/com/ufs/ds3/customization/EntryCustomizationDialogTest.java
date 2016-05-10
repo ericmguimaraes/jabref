@@ -13,6 +13,7 @@ import org.assertj.swing.fixture.DialogFixture;
 import org.assertj.swing.fixture.FrameFixture;
 import org.assertj.swing.fixture.JButtonFixture;
 import org.assertj.swing.fixture.JListFixture;
+import org.assertj.swing.fixture.JOptionPaneFixture;
 import org.assertj.swing.fixture.JTextComponentFixture;
 import org.assertj.swing.junit.testcase.AssertJSwingJUnitTestCase;
 import org.assertj.swing.launcher.ApplicationLauncher;
@@ -58,17 +59,27 @@ public class EntryCustomizationDialogTest extends AssertJSwingJUnitTestCase {
         Assert.assertTrue(isAdded(l.target(), "TESTE_ADD_ENTRY_TYPE"));
     }
 
+    @Test
     public void testRemoveEntryType() {
         frameFixture.menuItemWithPath("Options", Localization.lang("Customize entry types")).click();
         DialogFixture d = frameFixture.dialog();
         JTextComponentFixture text = d.textBox(getActiveTextArea());
-        text.enterText("TESTE_REMOVE_ENTRY_TYPE");
+        text.enterText("TEST_REMOVE_ENTRY_TYPE");
         JButtonFixture addButton = d.button(getActiveButton("add"));
         addButton.click();
-        JListFixture l = d.list(getJlistStringByItemValue("TESTE_REMOVE_ENTRY_TYPE"));
-        Assert.assertTrue(isAdded(l.target(), "TESTE_REMOVE_ENTRY_TYPE"));
+        JListFixture l = d.list(getJlistStringByItemValue("TEST_REMOVE_ENTRY_TYPE"));
+        Assert.assertTrue(isAdded(l.target(), "TEST_REMOVE_ENTRY_TYPE"));
+        l.clickItem("test_remove_entry_type");
         JButtonFixture removeButton = d.button(getActiveButtonByPositionAndText("remove", 1));
         Assert.assertTrue(removeButton != null);
+        removeButton.click();
+
+        //"This entry type cannot be removed."
+
+        JOptionPaneFixture errorMessage = d.optionPane();
+        Assert.assertTrue(errorMessage != null);
+        Assert.assertTrue(errorMessage.title().equals("Remove entry type"));
+        errorMessage.button().click();
     }
 
     private GenericTypeMatcher<? extends JButton> getActiveButtonByPositionAndText(String text, int i) {
