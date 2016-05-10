@@ -58,7 +58,6 @@ class FieldSetComponent extends JPanel implements ActionListener {
     private JComboBox<String> sel;
     private JTextField input;
     private final JButton add;
-    static int cont = 0;
     final JButton remove;
     private JButton up;
     private JButton down;
@@ -76,7 +75,6 @@ class FieldSetComponent extends JPanel implements ActionListener {
     public FieldSetComponent(String title, List<String> fields, List<String> preset, boolean arrows, boolean forceLowerCase) {
         this(title, fields, preset, Localization.lang("Add"),
                 Localization.lang("Remove"), arrows, forceLowerCase);
-        cont++;
     }
 
     /**
@@ -86,16 +84,13 @@ class FieldSetComponent extends JPanel implements ActionListener {
     FieldSetComponent(String title, List<String> fields, boolean arrows, boolean forceLowerCase) {
         this(title, fields, null, Localization.lang("Add"),
                 Localization.lang("Remove"), arrows, forceLowerCase);
-        cont++;
     }
 
     private FieldSetComponent(String title, List<String> fields, List<String> preset, String addText, String removeText,
                               boolean arrows, boolean forceLowerCase) {
-        cont++;
         this.forceLowerCase = forceLowerCase;
         add = new JButton(addText);
         remove = new JButton(removeText);
-        remove.setName("remove" + String.valueOf(cont));
         listModel = new DefaultListModel<>();
         JLabel title1 = null;
         if (title != null) {
