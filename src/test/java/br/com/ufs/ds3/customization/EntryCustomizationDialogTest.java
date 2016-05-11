@@ -60,6 +60,20 @@ public class EntryCustomizationDialogTest extends AssertJSwingJUnitTestCase {
     }
 
     @Test
+    public void testAddEntryTypeInvalid() {
+        frameFixture.menuItemWithPath("Options", Localization.lang("Customize entry types")).click();
+        DialogFixture d = frameFixture.dialog();
+        JTextComponentFixture text = d.textBox(getActiveTextArea());
+        text.enterText("T&ST&_@DD_&NTRY_TYP&");
+        JButtonFixture b = d.button(getActiveButton("add"));
+        b.click();
+
+        JOptionPaneFixture errorMessage = d.optionPane();
+        Assert.assertTrue(errorMessage != null);
+        Assert.assertTrue(errorMessage.title().equals("Error"));
+    }
+
+    @Test
     public void testRemoveEntryTypeAfterApply() {
         frameFixture.menuItemWithPath("Options", Localization.lang("Customize entry types")).click();
         DialogFixture d = frameFixture.dialog();
