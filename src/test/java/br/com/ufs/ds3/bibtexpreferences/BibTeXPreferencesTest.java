@@ -48,6 +48,24 @@ public class BibTeXPreferencesTest extends AssertJSwingJUnitTestCase {
     }
 
     @Test
+    public void addBibTeXKeyTest() {
+        GlobalLabelPattern addpattern = new GlobalLabelPattern();
+        JabRefPreferences JRprefs = JabRefPreferences.getInstance();
+        Vector<String> labels = new Vector<>();
+        labels.add("author");
+        labels.add("story");
+        labels.add("name");
+        addpattern.addLabelPattern("LABEL_KEY_TEST",
+                "[" + labels.elementAt(0) + "][" + labels.elementAt(1) + "][" + labels.elementAt(2) + "]");
+
+        JRprefs.putKeyPattern(addpattern);
+        GlobalLabelPattern getaddedpattern = JRprefs.getKeyPattern();
+        List<String> pattern = getaddedpattern.getValue("LABEL_KEY_TEST");
+
+        Assert.assertTrue(pattern != null);
+
+    }
+
     public void addBibTeXLabelPatternTest() {
         GlobalLabelPattern addpattern = new GlobalLabelPattern();
         JabRefPreferences JRprefs = JabRefPreferences.getInstance();
@@ -62,8 +80,6 @@ public class BibTeXPreferencesTest extends AssertJSwingJUnitTestCase {
         GlobalLabelPattern getaddedpattern = JRprefs.getKeyPattern();
         List<String> pattern = getaddedpattern.getValue("LABEL_KEY_TEST");
 
-        //verifica se Label Pattern foi adicionado
-        Assert.assertTrue(pattern != null);
         //Verifica se Preferências do Label Pattern foram adicionadas
         for (int i = 0; i < labels.size(); i++) {
             Assert.assertTrue(pattern.contains(labels.elementAt(i)));
@@ -102,7 +118,7 @@ public class BibTeXPreferencesTest extends AssertJSwingJUnitTestCase {
     }
 
     @Test
-    public void addEntryTypeAndCheckLabelPatternTestcheckEntryLabelPatternTest() {
+    public void addEntryTypeAndCheckLabelPatternTest() {
         TypeMatcherHelper THM = TypeMatcherHelper.getInstance();
         frameFixture.menuItemWithPath("Options", Localization.lang("Customize entry types")).click();
         DialogFixture d = frameFixture.dialog();
