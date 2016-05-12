@@ -9,14 +9,21 @@ import org.assertj.swing.edt.FailOnThreadViolationRepaintManager;
 import org.assertj.swing.finder.WindowFinder;
 import org.assertj.swing.junit.testcase.AssertJSwingJUnitTestCase;
 import org.assertj.swing.launcher.ApplicationLauncher;
+import org.assertj.swing.fixture.DialogFixture;
 import org.assertj.swing.fixture.FrameFixture;
-
+import org.assertj.swing.fixture.JButtonFixture;
+import org.assertj.swing.fixture.JLabelFixture;
+import org.assertj.swing.fixture.JListFixture;
+import org.assertj.swing.fixture.JTextComponentFixture;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import net.sf.jabref.JabRefMain;
 import net.sf.jabref.JabRefPreferences;
+import net.sf.jabref.logic.l10n.Localization;
 import net.sf.jabref.logic.labelPattern.GlobalLabelPattern;
+
+import br.com.ufs.ds3.customization.TypeMatcherHelper;
 
 public class BibTeXPreferencesTest extends AssertJSwingJUnitTestCase {
 
@@ -63,18 +70,83 @@ public class BibTeXPreferencesTest extends AssertJSwingJUnitTestCase {
         }
 
     }
-    /*
+
     @Test
-    public void changeBibTeXLabelPattertTest() {
+    public void setDefaultBibTeXLabelPattertTest() {
         JabRefPreferences JRprefs = JabRefPreferences.getInstance();
-        GlobalLabelPattern patterns = JRprefs.getKeyPattern();
-        patterns.addLabelPattern("LABEL_KEY_TEST", "LABEL_PATTERN_TEST");
-        patterns.addLabelPattern("LABEL_KEY_TEST2", "LABEL_PATTERN_TEST2");
-        patterns.addLabelPattern("LABEL_KEY_TEST3", "LABEL_PATTERN_TEST3");
-        Set<String> keys = patterns.getAllKeys();
-        for (String key : keys) {
-            patterns.setDefaultValue(key);
+        GlobalLabelPattern defaultPatterns = new GlobalLabelPattern();
+        Vector<String> defaultLabels = new Vector<>();
+        defaultLabels.add("Defaultauthor");
+        defaultLabels.add("Defaultstory");
+        defaultLabels.add("Defaultname");
+        defaultPatterns.setDefaultValue(
+                "[" + defaultLabels.elementAt(0) + "][" + defaultLabels.elementAt(1) + "][" + defaultLabels.elementAt(2)
+                        + "]");
+
+        Vector<String> labels = new Vector<>();
+        labels.add("author");
+        labels.add("story");
+        labels.add("name");
+
+        defaultPatterns.addLabelPattern("KEY",
+                "[" + labels.elementAt(0) + "][" + labels.elementAt(1) + "][" + labels.elementAt(2) + "]");
+
+        System.out.println("====================");
+
+        List<String> defaultValues = defaultPatterns.getValue("INVALID_KEY");
+        Assert.assertTrue(defaultValues != null);
+        for (int i = 0; i < defaultLabels.size(); i++) {
+            Assert.assertTrue(defaultValues.contains(defaultLabels.elementAt(i)));
         }
+
     }
-    */
+
+    @Test
+    public void addEntryTypeAndCheckLabelPatternTestcheckEntryLabelPatternTest() {
+        TypeMatcherHelper THM = TypeMatcherHelper.getInstance();
+        frameFixture.menuItemWithPath("Options", Localization.lang("Customize entry types")).click();
+        DialogFixture d = frameFixture.dialog();
+        JTextComponentFixture text = d.textBox(THM.getActiveTextArea());
+        text.enterText("New_entry");
+        JButtonFixture addButton = d.button(THM.getActiveButton("add"));
+        addButton.click();
+        JButtonFixture ok = d.button(THM.getActiveButton("ok"));
+        ok.click();
+
+        frameFixture.menuItemWithPath("Options", Localization.lang("Preferences")).click();
+        DialogFixture pref = frameFixture.dialog();
+        JListFixture prefList = pref.list();
+        prefList.clickItem("BibTeX key generator");
+
+        JLabelFixture newentry = pref.label(THM.getLabelbyName("New_entry"));
+        Assert.assertTrue(newentry != null);
+
+        pref.close();
+
+        frameFixture.menuItemWithPath("Options", Localization.lang("Customize entry types")).click();
+        d = frameFixture.dialog();
+        text = d.textBox(THM.getActiveTextArea());
+        text.enterText("Another_entry");
+        addButton = d.button(THM.getActiveButton("add"));
+        addButton.click();
+        ok = d.button(THM.getButtonByText("OK"));
+        ok.click();
+
+        frameFixture.menuItemWithPath("Options", Localization.lang("Preferences")).click();
+        pref = frameFixture.dialog();
+        prefList = pref.list();
+        prefList.clickItem("BibTeX key generator");
+
+        JLabelFixture anotherentry = null;
+        try {
+            anotherentry = pref.label(THM.getLabelbyName("Another_entry"));
+        } catch (Exception e) {
+            System.out.println("Component not found");
+        }
+        //É esperado que aqui ocorra um erro
+        Assert.assertTrue(anotherentry != null);
+
+        pref.close();
+    }
+
 }

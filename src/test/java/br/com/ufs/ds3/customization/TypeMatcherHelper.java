@@ -1,6 +1,7 @@
 package br.com.ufs.ds3.customization;
 
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JTextField;
 import javax.swing.ListModel;
@@ -15,7 +16,7 @@ public class TypeMatcherHelper {
     private TypeMatcherHelper() {
     }
 
-    public TypeMatcherHelper getInstance() {
+    public static TypeMatcherHelper getInstance() {
         if(INSTANCE==null) {
             INSTANCE = new TypeMatcherHelper();
         }
@@ -28,7 +29,7 @@ public class TypeMatcherHelper {
     /*
      * Encontra um botão ativo com texto especifico
      */
-    private GenericTypeMatcher<JButton> getActiveButton(final String text) {
+    public GenericTypeMatcher<JButton> getActiveButton(final String text) {
         GenericTypeMatcher<JButton> textMatcher = new GenericTypeMatcher<JButton>(JButton.class) {
 
             @Override
@@ -45,7 +46,7 @@ public class TypeMatcherHelper {
     /*
      * Encontra um combobox que tenha uma das linhas com texto especifico
      */
-    private GenericTypeMatcher<javax.swing.JComboBox> getComboBoxByValue(final String text) {
+    public GenericTypeMatcher<javax.swing.JComboBox> getComboBoxByValue(final String text) {
         GenericTypeMatcher<javax.swing.JComboBox> textMatcher = new GenericTypeMatcher<javax.swing.JComboBox>(
                 javax.swing.JComboBox.class) {
 
@@ -67,7 +68,7 @@ public class TypeMatcherHelper {
     /*
     * Encontra um JList que tenha uma das linhas com texto especifico
     */
-    private GenericTypeMatcher<javax.swing.JList> getJlistStringByItemValue(final String value) {
+    public GenericTypeMatcher<javax.swing.JList> getJlistStringByItemValue(final String value) {
         GenericTypeMatcher<javax.swing.JList> textMatcher = new GenericTypeMatcher<javax.swing.JList>(
                 javax.swing.JList.class) {
 
@@ -93,7 +94,7 @@ public class TypeMatcherHelper {
     /*
      * encontra unico JTextField ativo na tela
      */
-    private GenericTypeMatcher<JTextField> getActiveTextArea() {
+    public GenericTypeMatcher<JTextField> getActiveTextArea() {
         GenericTypeMatcher<JTextField> textMatcher = new GenericTypeMatcher<JTextField>(JTextField.class) {
 
             @Override
@@ -111,7 +112,7 @@ public class TypeMatcherHelper {
      * Encontra o botao correspondente a posicao pos e com texto text
      * Para casos em que temos mais de um botao igual na tela
      */
-    private GenericTypeMatcher<? extends JButton> getActiveButtonByPositionAndText(String text, int pos) {
+    public GenericTypeMatcher<? extends JButton> getActiveButtonByPositionAndText(String text, int pos) {
         countPosition = 0;
         GenericTypeMatcher<JButton> textMatcher = new GenericTypeMatcher<JButton>(JButton.class) {
 
@@ -129,4 +130,32 @@ public class TypeMatcherHelper {
         return textMatcher;
     }
 
+    public GenericTypeMatcher<? extends JButton> getButtonByText(String text) {
+        countPosition = 0;
+        GenericTypeMatcher<JButton> textMatcher = new GenericTypeMatcher<JButton>(JButton.class) {
+
+            @Override
+            protected boolean isMatching(JButton component) {
+                if (component.getText().toLowerCase().equals(text.toLowerCase()) && component.isEnabled()) {
+                    return true;
+                }
+                return false;
+            }
+        };
+        return textMatcher;
+    }
+
+    public GenericTypeMatcher<? extends JLabel> getLabelbyName(String name) {
+        GenericTypeMatcher<JLabel> textMatcher = new GenericTypeMatcher<JLabel>(JLabel.class) {
+
+            @Override
+            protected boolean isMatching(JLabel component) {
+                if (component.getText().toLowerCase().equals(name.toLowerCase())) {
+                    return true;
+                }
+                return false;
+            }
+        };
+        return textMatcher;
+    }
 }
