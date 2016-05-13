@@ -25,7 +25,7 @@ import net.sf.jabref.logic.labelPattern.GlobalLabelPattern;
 
 import br.com.ufs.ds3.customization.TypeMatcherHelper;
 
-public class BibTeXPreferencesTest extends AssertJSwingJUnitTestCase {
+public class BibTeXPreferences extends AssertJSwingJUnitTestCase {
 
     private FrameFixture frameFixture;
 
@@ -89,7 +89,6 @@ public class BibTeXPreferencesTest extends AssertJSwingJUnitTestCase {
 
     @Test
     public void setDefaultBibTeXLabelPattertTest() {
-        JabRefPreferences JRprefs = JabRefPreferences.getInstance();
         GlobalLabelPattern defaultPatterns = new GlobalLabelPattern();
         Vector<String> defaultLabels = new Vector<>();
         defaultLabels.add("Defaultauthor");
