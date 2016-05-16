@@ -360,7 +360,11 @@ task getdeps(type: Copy) {
 
 task regressionTest(type: Test) {
 	filter {
-		includeTestsMatching "br.com.ufs.ds3.customization.EntryCustomizationDialogTest"
+		includeTestsMatching "br.com.ufs.ds3.bibtexpreferences.BibTeXPreferences"
 		includeTestsMatching "br.com.ufs.ds3.customization.EntryTypesTest"
+		includeTestsMatching "br.com.ufs.ds3.autogeneratekey.AutoGenerateKeyTest"
+		includeTestsMatching "br.com.ufs.ds3.export.HtmlExportIT"
+		includeTestsMatching "br.com.ufs.ds3.generalfields.GenFieldsCustomizerTest"
+		includeTestsMatching "net.sf.jabref.*"
 	}
 }
