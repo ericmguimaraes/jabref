@@ -193,22 +193,6 @@ public class EntryCustomizationDialogTest extends AssertJSwingJUnitTestCase {
         return textMatcher;
     }
 
-    /*
-    private GenericTypeMatcher<javax.swing.JButton> getJButtonStringByNameAndActive(final String name) {
-        GenericTypeMatcher<javax.swing.JButton> nameActiveMatcher = new GenericTypeMatcher<JButton>(
-                javax.swing.JButton.class) {
-
-
-
-            @Override
-            protected boolean isMatching(JButton component) {
-                // TODO Auto-generated method stub
-
-            }
-        };
-
-    }
-    */
 
     private GenericTypeMatcher<javax.swing.JList> getJlistStringByItemValue(final String value) {
         GenericTypeMatcher<javax.swing.JList> textMatcher = new GenericTypeMatcher<javax.swing.JList>(
